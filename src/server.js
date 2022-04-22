@@ -1,15 +1,16 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const path = require('path');
 const morgan = require('morgan');
 const cors = require('cors');
-const { contactsRouter } = require('./src/routes/contacts/contacts.router');
+const contacts = require('./routes/contacts');
+
+console.log('contacts', contacts)
+
+
 
 
 // .env config
-dotenv.config({path: path.resolve(__dirname, './.env')});
 
-const PORT = process.env.PORT
+
 const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN
 
 // create server
@@ -21,7 +22,7 @@ app.use(morgan('dev'));
 app.use(cors({origin: ALLOWED_CORS_ORIGIN}));
 
 //Routes
-app.use('/users', contactsRouter);
+// app.use('/users', contacts);
 
 //Errors middleware
 app.use((err, req, res, next) => {
@@ -29,11 +30,10 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send(err.message);
 });
 
+exports.app = app;
+
 // Start listen
-app.listen(PORT, err => {
-  if (err) console.error(err);
-  console.log(`Server works on port: ${PORT}`);
-});
+
 
 
 
