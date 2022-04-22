@@ -1,28 +1,29 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const contacts = require('./routes/contacts');
 
-console.log('contacts', contacts)
-
-
-
+const contactsRouter = require('./routes/contacts/contacts.router');
 
 // .env config
 
-
-const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN
+const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN;
 
 // create server
 const app = express();
 
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
+
 // middlewares
 app.use(express.json({ limit: '200kb' }));
-app.use(morgan('dev'));
-app.use(cors({origin: ALLOWED_CORS_ORIGIN}));
+app.use(morgan(formatsLogger));
+app.use(cors({ origin: ALLOWED_CORS_ORIGIN }));
 
 //Routes
-// app.use('/users', contacts);
+app.use('/contacts', contactsRouter);
+
+app.use((req, res) => {
+  res.status(404).send({ message: 'Page Not found' });
+});
 
 //Errors middleware
 app.use((err, req, res, next) => {
@@ -31,9 +32,3 @@ app.use((err, req, res, next) => {
 });
 
 exports.app = app;
-
-// Start listen
-
-
-
-
