@@ -6,7 +6,7 @@ const contactsRouter = require('./routes/contacts/contacts.router');
 
 // .env config
 
-const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN;
+const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN ?? '*';
 
 // create server
 const app = express();
