@@ -21,8 +21,12 @@ const {
 const router = Router();
 
 router.post('/', validateRequest(contactSchema), async (req, res, next) => {
-  const contact = await addContact(req.body);
-  res.status(201).send(normalizeContactResponce(contact));
+  try {
+    const contact = await addContact(req.body);
+    res.status(201).send(normalizeContactResponce(contact));
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get('/', async (req, res, next) => {
