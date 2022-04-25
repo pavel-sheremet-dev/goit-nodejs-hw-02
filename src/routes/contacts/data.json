@@ -3,60 +3,77 @@
     "id": "1",
     "name": "Allen Raymond",
     "email": "nulla.ante@vestibul.co.uk",
-    "phone": "(992) 914-3792"
+    "phone": "(992) 914-3792",
+    "password": "qweqweqwe"
   },
   {
     "id": "3",
     "name": "Mykola",
     "email": "mattis.Cras@nonenimMauris.net",
-    "phone": "+3216546874654"
+    "phone": "+3216546874654",
+    "password": "qweqweqwe"
   },
   {
     "id": "4",
     "name": "Amir",
     "email": "est@utquamvel.net",
-    "phone": "1231231231231"
+    "phone": "1231231231231",
+    "password": "qweqweqwe"
   },
   {
     "id": "6",
     "name": "Abbot Franks",
     "email": "scelerisque@magnis.org",
-    "phone": "(186) 568-3720"
+    "phone": "(186) 568-3720",
+    "password": "qweqweqwe"
   },
   {
     "id": "7",
     "name": "Reuben Henry",
     "email": "pharetra.ut@dictum.co.uk",
-    "phone": "(715) 598-5792"
+    "phone": "(715) 598-5792",
+    "password": "qweqweqwe"
   },
   {
     "id": "8",
     "name": "Simon Morton",
     "email": "dui.Fusce.diam@Donec.com",
-    "phone": "(233) 738-2360"
+    "phone": "(233) 738-2360",
+    "password": "qweqweqwe"
   },
   {
     "id": "9",
     "name": "Thomas Lucas",
     "email": "nec@Nulla.com",
-    "phone": "(704) 398-7993"
+    "phone": "(704) 398-7993",
+    "password": "qweqweqwe"
   },
   {
     "id": "10",
     "name": "Alec Howard",
     "email": "Donec.elementum@scelerisquescelerisquedui.net",
-    "phone": "(748) 206-2688"
+    "phone": "(748) 206-2688",
+    "password": "qweqweqwe"
   },
   {
     "id": "9oWNsF1RBrnVX0mKBtKrr",
     "name": "Vasya",
     "email": "mail@mail.com",
-    "phone": "+3216546874654"
+    "phone": "+3216546874654",
+    "password": "qweqweqwe"
   },
   {
     "id": "vvbMRmwd6sZaCDGiglVkR",
     "name": "Vasya",
     "email": "mail@mail.com",
-    "phone": "+3216546874654"
+    "phone": "+3216546874654",
+    "password": "qweqweqwe"
+  },
+  {
+    "id": "8JKMccUtUxGLc0NHTScMf",
+    "name": "Alex Snr.",
+    "phone": "321654654654",
+    "email": "mail@mail.com",
+    "password": "fdsfsdfsdf"
   }
 ]
