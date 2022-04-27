@@ -1,39 +1,39 @@
 const { NotFound } = require('http-errors');
-const { model } = require('./model');
 const {
   serializeContactsListResponce,
   serializeContactResponce,
 } = require('./serialize');
+const { service } = require('./service');
 
 class ContactsController {
-  addContact = async (req, res, next) => {
-    const contact = await model.addContact(req.body);
+  addContact = async (req, res) => {
+    const contact = await service.addContact(req.body);
 
     res.status(201).send(serializeContactResponce(contact));
   };
 
-  getContacts = async (req, res, next) => {
-    const contacts = await model.listContacts();
+  getContacts = async (req, res) => {
+    const contacts = await service.getContacts();
 
     res.status(200).send(serializeContactsListResponce(contacts));
   };
 
-  getContact = async (req, res, next) => {
-    const contact = await model.getContactById(req.params.id);
+  getContact = async (req, res) => {
+    const contact = await service.getContact(req.params.id);
     if (!contact) throw new NotFound('Contact not found');
 
     res.status(200).send(serializeContactResponce(contact));
   };
 
-  updateContact = async (req, res, next) => {
-    const contact = await model.updateContact(req.params.id, req.body);
+  updateContact = async (req, res) => {
+    const contact = await service.updateContact(req.params.id, req.body);
     if (!contact) throw new NotFound('Contact not found');
 
     res.status(200).send(serializeContactResponce(contact));
   };
 
-  deleteContact = async (req, res, next) => {
-    const isContactDeleted = await model.removeContact(req.params.id);
+  deleteContact = async (req, res) => {
+    const isContactDeleted = await service.deleteContact(req.params.id);
     if (!isContactDeleted) throw new NotFound('Contact not found');
 
     res.status(204).send();
