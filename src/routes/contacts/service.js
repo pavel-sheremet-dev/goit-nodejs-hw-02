@@ -2,25 +2,28 @@ const { NotFound } = require('http-errors');
 const { model } = require('./model');
 
 class ContactsService {
-  addContact = async reqParams => await model.addContact(reqParams);
+  addContact = async reqParams => await model.create(reqParams);
 
-  getContacts = async () => await model.listContacts();
+  getContacts = async () => await model.find();
 
   getContact = async id => {
-    const contact = await model.getContactById(id);
+    const contact = await model.findById(id);
     if (!contact) throw new NotFound('Contact not found');
     return contact;
   };
 
   updateContact = async (id, reqParams) => {
-    const contact = await model.updateContact(id, reqParams);
+    const contact = await model.findByIdAndUpdate(id, reqParams, {
+      new: true,
+      runValidators: true,
+    });
     if (!contact) throw new NotFound('Contact not found');
     return contact;
   };
 
   deleteContact = async id => {
-    const isContactDeleted = await model.removeContact(id);
-    if (!isContactDeleted) throw new NotFound('Contact not found');
+    const result = await model.deleteOne({ _id: id });
+    if (!result.deletedCount) throw new NotFound('Contact not found');
   };
 }
 

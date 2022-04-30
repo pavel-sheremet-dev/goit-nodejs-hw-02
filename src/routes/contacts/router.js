@@ -1,23 +1,39 @@
 //  CRUD
 const { Router } = require('express');
 
-const { validateRequest, asyncWrapper } = require('../../helpers').middlewares;
-const { contactSchema, updateContactSchema } = require('./schemas');
-const { addContact, getContacts, getContact, updateContact, deleteContact } =
-  require('./controller').controller;
+const { schema } = require('./model');
+const { controller } = require('./controller');
+const { validateRequest, catchError } = require('../../helpers/middlewares');
 
 const router = Router();
 
-// 1. C - Create
-
-router.post('/', validateRequest(contactSchema), asyncWrapper(addContact));
-router.get('/', asyncWrapper(getContacts));
-router.get('/:id', asyncWrapper(getContact));
+router.post(
+  '/',
+  validateRequest(schema.contact),
+  catchError(controller.addContact),
+);
+router.get('/', catchError(controller.getContacts));
+router.get(
+  '/:id',
+  validateRequest(schema.id, 'params'),
+  catchError(controller.getContact),
+);
 router.put(
   '/:id',
-  validateRequest(updateContactSchema),
-  asyncWrapper(updateContact),
+  validateRequest(schema.id, 'params'),
+  validateRequest(schema.updateContact),
+  catchError(controller.updateContact),
 );
-router.delete('/:id', asyncWrapper(deleteContact));
+router.patch(
+  '/:id/favorite',
+  validateRequest(schema.id, 'params'),
+  validateRequest(schema.updateStatusContact),
+  catchError(controller.updateContact),
+);
+router.delete(
+  '/:id',
+  validateRequest(schema.id, 'params'),
+  catchError(controller.deleteContact),
+);
 
 exports.contactsRouter = router;

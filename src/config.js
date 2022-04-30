@@ -3,5 +3,6 @@ exports.getConfig = () => {
     PORT: process.env.PORT ?? 3000,
     ALLOWED_CORS_ORIGIN: process.env.ALLOWED_CORS_ORIGIN ?? '*',
     getLoggerFormat: env => (env === 'development' ? 'dev' : 'short'),
+    MONGO_URI: process.env.MONGO_URI,
   };
 };

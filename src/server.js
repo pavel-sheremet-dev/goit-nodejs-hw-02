@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const morgan = require('morgan');
@@ -14,7 +15,7 @@ class Server {
   start() {
     this.initSever();
     this.initConfig();
-    // this.initDataBase()
+    this.initDataBase();
     this.initMiddlewares();
     this.initRoutes();
     this.initErrorHandling();
@@ -29,7 +30,16 @@ class Server {
     dotenv.config({ path: path.resolve(__dirname, '../.env') });
   };
 
-  // configure()
+  initDataBase = async () => {
+    const { MONGO_URI } = getConfig();
+    try {
+      await mongoose.connect(MONGO_URI);
+      console.log('Database successfully connected');
+    } catch (error) {
+      console.log('Database error connection');
+      process.exit(1);
+    }
+  };
 
   initMiddlewares = () => {
     this.app.use(express.json({ limit: '200kb' }));
