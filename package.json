@@ -23,12 +23,14 @@
   "homepage": "https://github.com/pavel-sheremet-dev/goit-nodejs-hw-02#readme",
   "dependencies": {
     "axios": "^0.26.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "http-errors": "^2.0.0",
     "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.1",
     "morgan": "^1.10.0",
     "nanoid": "^3.3.3"

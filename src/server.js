@@ -4,8 +4,10 @@ const dotenv = require('dotenv');
 const path = require('path');
 const morgan = require('morgan');
 const cors = require('cors');
-const { getConfig } = require('./config');
+
 const { contactsRouter } = require('./routes/contacts/router');
+const { authRouter } = require('./routes/auth/router');
+const { config } = require('./config');
 
 class Server {
   constructor() {
@@ -31,7 +33,7 @@ class Server {
   };
 
   initDataBase = async () => {
-    const { MONGO_URI } = getConfig();
+    const { MONGO_URI } = config.getEnvVars();
     try {
       await mongoose.connect(MONGO_URI);
       console.log('Database successfully connected');
@@ -49,6 +51,7 @@ class Server {
 
   initRoutes = () => {
     this.app.use('/api/contacts', contactsRouter);
+    this.app.use('/api/users', authRouter);
   };
 
   initErrorHandling = () => {
@@ -59,7 +62,7 @@ class Server {
   };
 
   startListening = () => {
-    const { PORT } = getConfig();
+    const { PORT } = config.getEnvVars();
     this.app.listen(PORT, err => {
       if (err) console.error(err);
       console.log(`Server works on PORT: ${PORT}`);
@@ -67,13 +70,13 @@ class Server {
   };
 
   configureLogger = () => {
-    const { getLoggerFormat } = getConfig();
+    const { getLoggerFormat } = config.getEnvVars();
     const loggerFormat = getLoggerFormat(this.app.get('env'));
     this.app.use(morgan(loggerFormat));
   };
 
   configureCors = () => {
-    const { CORS } = getConfig();
+    const { CORS } = config.getEnvVars();
     this.app.use(cors({ origin: CORS }));
   };
 }

@@ -1,41 +1,49 @@
-const { NotFound } = require('http-errors');
-const {
-  serializeContactsListResponce,
-  serializeContactResponce,
-} = require('./serialize');
+const { serialize } = require('./serialize');
 const { service } = require('./service');
 
 class ContactsController {
   addContact = async (req, res) => {
-    const contact = await service.addContact(req.body);
-
-    res.status(201).send(serializeContactResponce(contact));
+    const contact = await service.addContact({
+      ...req.body,
+      owner: req.user.id,
+    });
+    res.status(201).send(serialize.contactResponce(contact));
   };
 
   getContacts = async (req, res) => {
-    const contacts = await service.getContacts();
+    const { id: owner } = req.user;
+    const { page = 1, limit = 10, favorite } = req.query;
 
-    res.status(200).send(serializeContactsListResponce(contacts));
+    const { contacts, totalContacts } = await service.getContacts(
+      { page, limit },
+      { owner, favorite },
+    );
+
+    res.status(200).send(
+      serialize.contactsListResponce(contacts, {
+        totalContacts,
+        page,
+        limit,
+      }),
+    );
   };
 
   getContact = async (req, res) => {
-    const contact = await service.getContact(req.params.id);
-    if (!contact) throw new NotFound('Contact not found');
-
-    res.status(200).send(serializeContactResponce(contact));
+    const contact = await service.getContact(req.params.id, req.user.id);
+    res.status(200).send(serialize.contactResponce(contact));
   };
 
   updateContact = async (req, res) => {
-    const contact = await service.updateContact(req.params.id, req.body);
-    if (!contact) throw new NotFound('Contact not found');
-
-    res.status(200).send(serializeContactResponce(contact));
+    const contact = await service.updateContact(
+      req.params.id,
+      req.body,
+      req.user.id,
+    );
+    res.status(200).send(serialize.contactResponce(contact));
   };
 
   deleteContact = async (req, res) => {
-    const isContactDeleted = await service.deleteContact(req.params.id);
-    if (!isContactDeleted) throw new NotFound('Contact not found');
-
+    await service.deleteContact(req.params.id, req.user.id);
     res.status(204).send();
   };
 }

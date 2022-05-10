@@ -1,8 +1,7 @@
 const errors = require('http-errors');
 const mongoose = require('mongoose');
 const joi = require('joi');
-
-const { Schema, isValidObjectId } = mongoose;
+const { checkObjectId, checkLimit } = require('../../helpers');
 
 class JoiContactSchema {
   contact = joi.object({
@@ -14,10 +13,6 @@ class JoiContactSchema {
     phone: joi
       .string()
       .pattern(/^[0-9()+\s-]{10,19}$/)
-      .required(),
-    password: joi
-      .string()
-      .pattern(/^[0-9a-zA-Z_\s'’ʼ-]{3,30}$/)
       .required(),
     favorite: joi.boolean(),
   });
@@ -34,17 +29,17 @@ class JoiContactSchema {
   });
 
   id = joi.object({
-    id: joi
-      .string()
-      .custom((value, helpers) => {
-        if (!isValidObjectId(value)) {
-          return helpers.error('Contact not Found. Invalid ID');
-        }
-        return value;
-      })
-      .required(),
+    id: joi.string().custom(checkObjectId).required(),
+  });
+
+  queryParams = joi.object({
+    page: joi.number(),
+    limit: joi.number().custom(checkLimit),
+    favorite: joi.boolean(),
   });
 }
+
+const { Schema } = mongoose;
 
 const contactsSchema = new Schema({
   name: {
@@ -64,17 +59,23 @@ const contactsSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  password: {
-    type: String,
-    required: [true, 'Set password for contact'],
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
 });
 
-const schemaErrorHandlingMiddlware = (error, doc, next) => {
+const populateOwner = function (...fields) {
+  return function () {
+    this.populate('owner', fields);
+  };
+};
+
+const schemaErrorHandling = (error, doc, next) => {
   if (error.name === 'MongoServerError' && error.code === 11000) {
     next(
       new errors[409](
-        `User with email "${error.keyValue.email}" already exist`,
+        `Contact with email "${error.keyValue.email}" already exist`,
       ),
     );
   } else {
@@ -82,7 +83,11 @@ const schemaErrorHandlingMiddlware = (error, doc, next) => {
   }
 };
 
-contactsSchema.post(['save', 'findOneAndUpdate'], schemaErrorHandlingMiddlware);
+contactsSchema.pre(
+  ['find', 'findOne', 'findOneAndUpdate'],
+  populateOwner('email'),
+);
+contactsSchema.post(['save', 'findOneAndUpdate'], schemaErrorHandling);
 
 exports.schema = new JoiContactSchema();
-exports.model = mongoose.model('Contact', contactsSchema, 'contacts');
+exports.Contact = mongoose.model('Contact', contactsSchema, 'contacts');

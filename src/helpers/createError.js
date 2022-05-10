@@ -3,10 +3,8 @@ const statusMessages = {
   // Тд.
 };
 
-const createError = (status, message = statusMessages[status]) => {
+exports.createError = (status, message = statusMessages[status]) => {
   const error = new Error(message);
   error.status = status;
   return error;
 };
-
-module.exports = createError;
