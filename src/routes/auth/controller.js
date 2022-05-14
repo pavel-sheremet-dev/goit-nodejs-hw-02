@@ -26,6 +26,12 @@ class AuthController {
     const user = await service.updateSubscription(req.body);
     res.status(201).send(serialize.user(user));
   };
+
+  updateAvatar = async (req, res) => {
+    const { user, file, url } = req;
+    const updatedUser = await service.updateAvatar(user, file, url);
+    res.status(200).send(serialize.userAvatarUrl(updatedUser));
+  };
 }
 
 exports.controller = new AuthController();

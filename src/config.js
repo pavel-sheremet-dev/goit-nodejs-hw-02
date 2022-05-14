@@ -1,3 +1,5 @@
+const path = require('path');
+
 class Config {
   getEnvVars = () => {
     return {
@@ -14,6 +16,14 @@ class Config {
     pro: 'pro',
     business: 'business',
     super: 'super_admin',
+  });
+
+  getMimetypes = () => ['image/jpeg', 'image/png'];
+
+  getDirPath = () => ({
+    temp: path.resolve(process.cwd(), 'temp'),
+    static: path.resolve(process.cwd(), 'static'),
+    avatars: path.resolve(process.cwd(), 'static', 'avatars'),
   });
 }
 

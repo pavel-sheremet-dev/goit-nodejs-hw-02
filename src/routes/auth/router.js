@@ -3,7 +3,7 @@ const { Router } = require('express');
 const { schema } = require('./model');
 const { controller } = require('./controller');
 const { authMidllwares: authMid } = require('./middlewares');
-const { commonMiddlwares } = require('../../helpers');
+const { commonMiddlwares, uploadMiddleware: upload } = require('../../helpers');
 const { config } = require('../../config');
 
 const { validateRequest, catchError } = commonMiddlwares;
@@ -32,10 +32,17 @@ router.get(
 );
 
 router.patch(
-  '/users',
+  '/',
   authMid.authhorize(superAdmin),
   validateRequest(schema.updateSubscription),
   catchError(controller.updateSubscription),
+);
+
+router.patch(
+  '/avatars',
+  authMid.authhorize(),
+  upload.single('avatar'),
+  catchError(controller.updateAvatar),
 );
 
 exports.authRouter = router;

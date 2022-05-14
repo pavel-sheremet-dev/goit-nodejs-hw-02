@@ -1,3 +1,7 @@
 const { Server } = require('./server');
 
-new Server().start();
+const startServer = () => {
+  new Server().start();
+}
+
+exports.startServer = startServer

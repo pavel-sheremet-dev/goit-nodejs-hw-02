@@ -36,6 +36,10 @@ const usersSchema = new Schema({
     type: String,
     required: [true, 'Password is required'],
   },
+  avatarUrl: {
+    type: String,
+    required: true,
+  },
   subscription: {
     type: String,
     enum: config.getSubscriptions().all,

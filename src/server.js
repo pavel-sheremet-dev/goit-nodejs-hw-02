@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const { contactsRouter } = require('./routes/contacts/router');
 const { authRouter } = require('./routes/auth/router');
+const { staticRouter } = require('./routes/static/router');
 const { config } = require('./config');
 
 class Server {
@@ -47,11 +48,14 @@ class Server {
     this.app.use(express.json({ limit: '200kb' }));
     this.configureLogger();
     this.configureCors();
+
+    this.app.use(express.static('static'));
   };
 
   initRoutes = () => {
     this.app.use('/api/contacts', contactsRouter);
     this.app.use('/api/users', authRouter);
+    this.app.use('/static', staticRouter);
   };
 
   initErrorHandling = () => {

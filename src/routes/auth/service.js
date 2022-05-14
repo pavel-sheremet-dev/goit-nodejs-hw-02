@@ -1,9 +1,10 @@
+const path = require('path');
 const { NotFound, Forbidden } = require('http-errors');
-const { auth } = require('../../helpers');
+const { auth, fsOperations, resizeImage } = require('../../helpers');
 const { config } = require('../../config');
 const { User } = require('./model');
 
-const superAdmin = config.getSubscriptions().super;
+const { getSubscriptions, getDirPath } = config;
 
 class AuthService {
   signUp = async reqParams => {
@@ -48,6 +49,7 @@ class AuthService {
     subscription,
     superAdminPassword = 'empty',
   }) => {
+    const superAdmin = getSubscriptions().super;
     const isUpdatetoAdmin = subscription === superAdmin;
     const isCorrectPassword = superAdminPassword === process.env.ADMIN_PASSWORD;
 
@@ -66,6 +68,35 @@ class AuthService {
 
     if (!user) throw new NotFound('User not found');
     return user;
+  };
+
+  updateAvatar = async (user, file, endpoint) => {
+    const { filename, path: oldPath } = file;
+    const { id, avatarUrl: oldAvatarUrl } = user;
+
+    await resizeImage(oldPath);
+
+    const avatarsPath = getDirPath().avatars;
+    const newPath = path.join(avatarsPath, filename);
+
+    await fsOperations.replaceFile(oldPath, newPath);
+
+    const avatarUrl = endpoint + '/' + filename;
+
+    const userToUpdate = await User.findByIdAndUpdate(
+      id,
+      { avatarUrl },
+      {
+        new: true,
+      },
+    );
+
+    const pathTodelete = userToUpdate ? oldAvatarUrl : avatarUrl;
+    await fsOperations.removeOldFileFromPublic(pathTodelete);
+
+    if (!userToUpdate) throw new NotFound('User not found');
+
+    return userToUpdate;
   };
 }
 

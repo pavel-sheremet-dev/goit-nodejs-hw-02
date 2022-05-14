@@ -9,6 +9,10 @@ class UserSerialize {
     user: this.user(user),
     token,
   });
+
+  userAvatarUrl = ({ avatarUrl }) => ({
+    avatarUrl,
+  });
 }
 
 exports.serialize = new UserSerialize();
